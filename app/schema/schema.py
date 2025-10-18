@@ -1,12 +1,13 @@
 import strawberry
-from app.modules.animal.interface.graphql_query import AnimalQuery, AnimalMutation
+from app.modules.animal.interface.graphql_query import AnimalQuery
+from app.modules.animal.interface.graphql_mutation import AnimalMutation
 from app.modules.usuario.interface.graphql_query import UsuarioQuery
 from app.modules.usuario.interface.graphql_mutation import UsuarioMutation
 from app.modules.adopcion.interface.graphql_query import AdopcionQuery
 from app.modules.adopcion.interface.graphql_mutation import AdopcionMutation
 
 @strawberry.type
-class Query(AnimalQuery, UsuarioQuery, AdopcionQuery):
+class Query(AnimalQuery, AnimalMutation, UsuarioQuery, AdopcionQuery):
     """Root Query - Combina todas las queries de los módulos"""
     pass
 
