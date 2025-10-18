@@ -3,7 +3,7 @@ from typing import Optional
 from uuid import UUID
 from app.modules.usuario.interface.graphql_type import UsuarioType, CreateUsuarioInput, UpdateUsuarioInput
 from app.modules.usuario.application.usuario_service import UsuarioService
-from app.modules.usuario.infrastructure.rest_adapter import UsuarioRESTAdapter
+from app.modules.usuario.infrastructure.usuario_repository import UsuarioRepository
 from app.modules.usuario.domain.entities import NewUsuario, UpdateUsuario
 
 
@@ -14,7 +14,7 @@ class UsuarioMutation:
     @strawberry.mutation
     async def crear_usuario(self, input: CreateUsuarioInput) -> UsuarioType:
         """Crear un nuevo usuario"""
-        adapter = UsuarioRESTAdapter()
+        adapter = UsuarioRepository()
         service = UsuarioService(adapter)
         
         nuevo_usuario = NewUsuario(
@@ -39,7 +39,7 @@ class UsuarioMutation:
     @strawberry.mutation
     async def actualizar_usuario(self, input: UpdateUsuarioInput) -> Optional[UsuarioType]:
         """Actualizar un usuario existente"""
-        adapter = UsuarioRESTAdapter()
+        adapter = UsuarioRepository()
         service = UsuarioService(adapter)
         
         usuario_actualizado = UpdateUsuario(
@@ -68,7 +68,7 @@ class UsuarioMutation:
     @strawberry.mutation
     async def eliminar_usuario(self, id_usuario: strawberry.ID) -> bool:
         """Eliminar un usuario"""
-        adapter = UsuarioRESTAdapter()
+        adapter = UsuarioRepository()
         service = UsuarioService(adapter)
         
         return await service.eliminar_usuario(UUID(id_usuario))

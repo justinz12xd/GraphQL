@@ -1,17 +1,17 @@
 import httpx
-from typing import List, Optional
+from typing import Optional
 from uuid import UUID
 from datetime import datetime
-from app.config.settings import REST_API_URL, HTTP_TIMEOUT
+from app.config.settings import settings
 from app.modules.usuario.domain.entities import Usuario, NewUsuario, UpdateUsuario
 
 
-class UsuarioRESTAdapter:
-    """Adaptador para consumir la API REST de usuarios en Rust"""
+class UsuarioRepository:
+    """Repositorio para gestionar usuarios mediante REST API"""
     
     def __init__(self):
-        self.base_url = REST_API_URL
-        self.timeout = HTTP_TIMEOUT
+        self.base_url = settings.REST_API_URL
+        self.timeout = 30
     
     async def _get_client(self) -> httpx.AsyncClient:
         """Crea un cliente HTTP asíncrono"""
@@ -28,20 +28,20 @@ class UsuarioRESTAdapter:
             nombre=data["nombre"],
             email=data["email"],
             contrasenia=data["contrasenia"],
-            telefono=data.get("telefono"),
-            direccion=data.get("direccion"),
             fecha_registro=datetime.fromisoformat(data["fecha_registro"].replace("Z", "+00:00")) 
                           if isinstance(data["fecha_registro"], str) 
-                          else data["fecha_registro"]
+                          else data["fecha_registro"],
+            telefono=data.get("telefono"),
+            direccion=data.get("direccion")
         )
     
-    async def listar_usuarios(self) -> List[Usuario]:
+    async def listar_usuarios(self) -> list[Usuario]:
         """GET /usuarios - Obtener todos los usuarios"""
         async with await self._get_client() as client:
             response = await client.get("/usuarios")
             response.raise_for_status()
-            data = response.json()
-            return [self._parse_usuario(item) for item in data]
+            usuarios_data = response.json()
+            return [self._parse_usuario(data) for data in usuarios_data]
     
     async def obtener_usuario_por_id(self, id_usuario: UUID) -> Optional[Usuario]:
         """GET /usuarios/{id} - Obtener un usuario por ID"""

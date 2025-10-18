@@ -1,34 +1,32 @@
-from app.modules.usuario.infrastructure.rest_adapter import UsuarioRESTAdapter
-from app.modules.usuario.domain.entities import Usuario, NewUsuario, UpdateUsuario
 from typing import List, Optional
 from uuid import UUID
-
+from app.modules.usuario.domain.entities import Usuario, NewUsuario, UpdateUsuario
+from app.modules.usuario.infrastructure.usuario_repository import UsuarioRepository
 
 class UsuarioService:
-    """Servicio de aplicación para gestionar usuarios"""
-    
-    def __init__(self, adapter: UsuarioRESTAdapter):
-        self.adapter = adapter
-    
-    async def obtener_todos_usuarios(self) -> List[Usuario]:
-        """Obtener todos los usuarios"""
-        return await self.adapter.listar_usuarios()
-    
-    async def obtener_usuario_por_id(self, id_usuario: UUID) -> Optional[Usuario]:
-        """Obtener un usuario por ID"""
-        return await self.adapter.obtener_usuario_por_id(id_usuario)
-    
-    async def crear_usuario(self, nuevo_usuario: NewUsuario) -> Usuario:
-        """Crear un nuevo usuario"""
-        # Aquí podrías agregar validaciones de negocio antes de crear
-        # Por ejemplo: validar formato de email, verificar que no exista, etc.
-        return await self.adapter.crear_usuario(nuevo_usuario)
-    
-    async def actualizar_usuario(self, usuario_actualizado: UpdateUsuario) -> Optional[Usuario]:
-        """Actualizar un usuario existente"""
-        # Aquí podrías agregar validaciones de negocio
-        return await self.adapter.actualizar_usuario(usuario_actualizado)
-    
-    async def eliminar_usuario(self, id_usuario: UUID) -> bool:
-        """Eliminar un usuario"""
-        return await self.adapter.eliminar_usuario(id_usuario)
+    """Servicio de aplicación que orquesta la lógica de negocio de los usuarios."""
+
+    def __init__(self, repo: UsuarioRepository):
+        """Recibe el repositorio como dependencia externa."""
+        self.repo = repo
+
+    async def obtener_todos(self) -> List[Usuario]:
+        """Obtiene todos los usuarios."""
+        return await self.repo.listar_usuarios()
+
+    async def obtener_por_id(self, id_usuario: UUID) -> Optional[Usuario]:
+        """Obtiene un usuario por su ID."""
+        return await self.repo.obtener_usuario_por_id(id_usuario)
+
+    async def crear(self, nuevo_usuario: NewUsuario) -> Usuario:
+        """Crea un nuevo usuario aplicando validaciones de negocio."""
+        # Ejemplo: validar email o existencia previa
+        return await self.repo.crear_usuario(nuevo_usuario)
+
+    async def actualizar(self, id_usuario: UUID, datos: UpdateUsuario) -> Optional[Usuario]:
+        """Actualiza un usuario existente."""
+        return await self.repo.actualizar_usuario(id_usuario, datos)
+
+    async def eliminar(self, id_usuario: UUID) -> bool:
+        """Elimina un usuario."""
+        return await self.repo.eliminar_usuario(id_usuario)

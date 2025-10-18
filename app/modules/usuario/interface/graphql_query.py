@@ -3,7 +3,7 @@ from typing import List, Optional
 from uuid import UUID
 from app.modules.usuario.interface.graphql_type import UsuarioType
 from app.modules.usuario.application.usuario_service import UsuarioService
-from app.modules.usuario.infrastructure.rest_adapter import UsuarioRESTAdapter
+from app.modules.usuario.infrastructure.usuario_repository import UsuarioRepository
 
 
 @strawberry.type
@@ -13,9 +13,9 @@ class UsuarioQuery:
     @strawberry.field
     async def usuarios(self) -> List[UsuarioType]:
         """Obtener todos los usuarios"""
-        adapter = UsuarioRESTAdapter()
+        adapter = UsuarioRepository()
         service = UsuarioService(adapter)
-        usuarios = await service.obtener_todos_usuarios()
+        usuarios = await service.obtener_todos()
         
         return [
             UsuarioType(
@@ -32,7 +32,7 @@ class UsuarioQuery:
     @strawberry.field
     async def usuario(self, id_usuario: strawberry.ID) -> Optional[UsuarioType]:
         """Obtener un usuario por ID"""
-        adapter = UsuarioRESTAdapter()
+        adapter = UsuarioRepository()
         service = UsuarioService(adapter)
         usuario = await service.obtener_usuario_por_id(UUID(id_usuario))
         
