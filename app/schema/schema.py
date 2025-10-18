@@ -1,19 +1,13 @@
+
 import strawberry
-from app.modules.usuario.interface.graphql_query import UsuarioQuery
-from app.modules.usuario.interface.graphql_mutation import UsuarioMutation
-
+from app.modules.animal.interface.graphql_query import AnimalQuery, AnimalMutation
 
 @strawberry.type
-class Query(UsuarioQuery):
-    """Query principal que agrupa todas las queries de los módulos"""
+class Query(AnimalQuery):
     pass
-
 
 @strawberry.type
-class Mutation(UsuarioMutation):
-    """Mutation principal que agrupa todas las mutations de los módulos"""
+class Mutation(AnimalMutation):
     pass
 
-
-# Crear el schema principal
 schema = strawberry.Schema(query=Query, mutation=Mutation)
