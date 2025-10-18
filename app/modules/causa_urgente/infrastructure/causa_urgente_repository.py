@@ -33,7 +33,7 @@ class CausaUrgenteRepository:
             fotos=data.get("fotos"),
         )
     
-    async def listar_causas_urgentes(self) -> list[CausaUrgente]:
+    async def obtener_causas_urgentes(self) -> list[CausaUrgente]:
         """GET /causas_urgentes - Obtener todas las causas urgentes"""
         async with await self._get_client() as client:
             response = await client.get("/causas_urgentes")
