@@ -7,14 +7,16 @@ from app.modules.adopcion.interface.graphql_query import AdopcionQuery
 from app.modules.adopcion.interface.graphql_mutation import AdopcionMutation
 from app.modules.causa_urgente.interface.graphql_mutation import CausaUrgenteMutation
 from app.modules.causa_urgente.interface.graphql_query import CausaUrgenteQuery
+from app.modules.pago.interface.graphql_query import PagoQuery
+from app.modules.pago.interface.graphql_mutation import PagoMutation
 
 @strawberry.type
-class Query(AnimalQuery, AnimalMutation, UsuarioQuery, AdopcionQuery, CausaUrgenteQuery):
+class Query(AnimalQuery, AnimalMutation, UsuarioQuery, AdopcionQuery, CausaUrgenteQuery, PagoQuery):
     """Root Query - Combina todas las queries de los módulos"""
     pass
 
 @strawberry.type
-class Mutation(AnimalMutation, UsuarioMutation, AdopcionMutation, CausaUrgenteMutation):
+class Mutation(AnimalMutation, UsuarioMutation, AdopcionMutation, CausaUrgenteMutation, PagoMutation):
     """Root Mutation - Combina todas las mutations de los módulos"""
     pass
 
