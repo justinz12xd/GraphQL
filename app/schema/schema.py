@@ -14,15 +14,16 @@ from app.modules.pago.interface.graphql_query import PagoQuery
 from app.modules.pago.interface.graphql_mutation import PagoMutation
 from app.modules.voluntario.interface.graphql_query import VoluntarioQuery
 from app.modules.voluntario.interface.graphql_mutation import VoluntarioMutation
-
+from app.modules.campania.interface.graphql_query import CampaniaQuery
+from app.modules.campania.interface.graphql_mutation import CampaniaMutation
 
 @strawberry.type
-class Query(AnimalQuery, UsuarioQuery, AdopcionQuery, CausaUrgenteQuery, PagoQuery, TipoCampaniaQuery, VoluntarioQuery):
+class Query(AnimalQuery, UsuarioQuery, AdopcionQuery, CausaUrgenteQuery, PagoQuery, CampaniaQuery, TipoCampaniaQuery, VoluntarioQuery):
     """Root Query - Combina todas las queries de los módulos"""
     pass
 
 @strawberry.type
-class Mutation(AnimalMutation, UsuarioMutation, AdopcionMutation, CausaUrgenteMutation, PagoMutation, TipoCampaniaMutation, VoluntarioMutation):
+class Mutation(AnimalMutation, UsuarioMutation, AdopcionMutation, CausaUrgenteMutation, PagoMutation, TipoCampaniaMutation, CampaniaMutation, VoluntarioMutation):
     """Root Mutation - Combina todas las mutations de los módulos"""
     pass
 

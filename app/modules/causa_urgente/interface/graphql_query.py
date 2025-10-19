@@ -37,12 +37,7 @@ class CausaUrgenteQuery:
             id_animal=strawberry.ID(str(causa_urgente.id_animal)) if causa_urgente.id_animal else None,
             fotos=causa_urgente.fotos)
     
-    # NOTA: crear_causa_urgente se movió a CausaUrgenteMutation
-    # NOTA: actualizar_causa_urgente se movió a CausaUrgenteMutation  
-    # NOTA: eliminar_causa_urgente se movió a CausaUrgenteMutation
-    # Las operaciones de creación, actualización y eliminación no deben estar en Query, solo en Mutation
 
-#Queries por refugio a probar luego
     @strawberry.field
     async def causas_urgentes_por_refugio(self, id_refugio: strawberry.ID) -> List[CausaUrgenteType]:
         service = CausaUrgenteService(CausaUrgenteRepository())
