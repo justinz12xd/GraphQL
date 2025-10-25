@@ -6,7 +6,7 @@ Este documento lista las **queries especiales** (filtros, relaciones y paginaci�
 
 ---
 
-## 🐾 Módulo: Animales (8 queries especiales)
+## 🐾 Módulo: Animales (9 queries especiales)
 
 ### 1. Buscar animales por nombre 🆕
 **Descripción**: Busca animales por nombre (búsqueda parcial, case-insensitive)
@@ -262,7 +262,75 @@ Con filtros (perros disponibles, paginados):
 - ✅ Combina con todos los filtros
 - ✅ Metadata completa para UI de paginación
 
-### 5. Obtener animales por estado de adopción
+### 5. Ordenamiento 🆕🔀
+**Descripción**: Obtiene animales ordenados por diferentes campos (nombre, edad, fecha de creación).
+
+```graphql
+query AnimalesOrdenados($orderBy: String = "nombre", $order: String = "asc") {
+  animalesOrdenados(orderBy: $orderBy, order: $order) {
+    idAnimal
+    nombre
+    edad
+    fechaCreacion
+    especie
+  }
+}
+```
+
+**Variables - Ejemplos de uso**:
+
+Ordenar por nombre A-Z:
+```json
+{
+  "orderBy": "nombre",
+  "order": "asc"
+}
+```
+
+Ordenar por nombre Z-A:
+```json
+{
+  "orderBy": "nombre",
+  "order": "desc"
+}
+```
+
+Ordenar por edad (más jóvenes primero):
+```json
+{
+  "orderBy": "edad",
+  "order": "asc"
+}
+```
+
+Ordenar por edad (más viejos primero):
+```json
+{
+  "orderBy": "edad",
+  "order": "desc"
+}
+```
+
+Ordenar por fecha de creación (más recientes primero):
+```json
+{
+  "orderBy": "fecha_creacion",
+  "order": "desc"
+}
+```
+
+**Campos disponibles para orderBy**:
+- `"nombre"` - Nombre del animal (alfabético, case-insensitive)
+- `"edad"` - Edad del animal (numérico, null al final)
+- `"fecha_creacion"` - Fecha de registro (más recientes primero con desc)
+
+**Ventajas**:
+- ✅ Ordenamiento flexible por 3 campos diferentes
+- ✅ Control ascendente/descendente
+- ✅ Animales sin datos (null) van al final
+- ✅ Compatible con todos los animales
+
+### 6. Obtener animales por estado de adopción
 **Descripción**: Filtra animales según su estado de adopción (disponible, adoptado, en proceso, etc.)
 
 ```graphql
@@ -280,7 +348,7 @@ query GetAnimalesPorEstado {
 
 **Estados posibles**: `"disponible"`, `"adoptado"`, `"en_proceso"`, `"reservado"`
 
-### 6. Obtener animales por especie
+### 7. Obtener animales por especie
 **Descripción**: Filtra todos los animales de una especie específica
 
 ```graphql
@@ -302,7 +370,7 @@ query GetAnimalesPorEspecie($especieId: ID!) {
 }
 ```
 
-### 7. Obtener animales por refugio
+### 8. Obtener animales por refugio
 **Descripción**: Obtiene todos los animales alojados en un refugio específico
 
 ```graphql
@@ -324,7 +392,7 @@ query GetAnimalesPorRefugio($refugioId: ID!) {
 }
 ```
 
-### 8. Obtener solo animales disponibles
+### 9. Obtener solo animales disponibles
 **Descripción**: Atajo para obtener solo animales con estado "disponible"
 
 ```graphql
@@ -596,6 +664,7 @@ query GetCatalogoAnimales($especieId: ID!) {
 | **Animal** | `animalesPorEdad` 🆕 | Filtro | `edadMin: Int, edadMax: Int` (opcionales) |
 | **Animal** | `animalesFiltrados` 🆕🔥 | Filtro Combinado | `nombre, idEspecie, idRefugio, estadoAdopcion, edadMin, edadMax` (todos opcionales) |
 | **Animal** | `animalesPaginados` 🆕📄 | Paginación + Filtros | `limit, offset, nombre, idEspecie, idRefugio, estadoAdopcion, edadMin, edadMax` (con metadata) |
+| **Animal** | `animalesOrdenados` 🆕🔀 | Ordenamiento | `orderBy: String, order: String` (nombre/edad/fecha_creacion + asc/desc) |
 | **Animal** | `animales(estadoAdopcion)` | Filtro | `String` opcional |
 | **Animal** | `animalesPorEspecie` | Filtro | `idEspecie: ID!` |
 | **Animal** | `animalesPorRefugio` | Filtro | `idRefugio: ID!` |
@@ -606,6 +675,6 @@ query GetCatalogoAnimales($especieId: ID!) {
 | **Pago** | `listarPagos` | Paginación | `limit, offset` |
 | **Pago** | `pagosPorDonacion` | Relación | `idDonacion: ID!` |
 
-**Total**: **13 queries especiales** + 26 queries básicas (listar/por ID) = **39 queries disponibles**
+**Total**: **14 queries especiales** + 26 queries básicas (listar/por ID) = **40 queries disponibles** 🎉
 
 --

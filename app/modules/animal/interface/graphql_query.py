@@ -253,4 +253,44 @@ class AnimalQuery:
             limit=resultado["limit"],
             offset=resultado["offset"]
         )
+    
+    @strawberry.field
+    async def animales_ordenados(
+        self,
+        order_by: str = "nombre",
+        order: str = "asc"
+    ) -> List[AnimalType]:
+        """
+        Obtener animales ordenados por un campo específico.
+        
+        Parámetros:
+        - order_by: Campo para ordenar ("nombre", "edad", "fecha_creacion")
+        - order: Dirección ("asc" o "desc")
+        
+        Ejemplos:
+        - order_by="nombre", order="asc" → A-Z
+        - order_by="edad", order="desc" → Más viejos primero
+        - order_by="fecha_creacion", order="desc" → Más recientes primero
+        """
+        adapter = AnimalRepository()
+        service = AnimalService(adapter)
+        
+        animales = await service.obtener_animales_ordenados(
+            order_by=order_by,
+            order=order
+        )
+        
+        return [AnimalType(
+            id_animal=strawberry.ID(str(animal.id_animal)),
+            nombre=animal.nombre,
+            id_especie=strawberry.ID(str(animal.id_especie)) if animal.id_especie else None,
+            especie=animal.especie,
+            edad=animal.edad,
+            estado=animal.estado,
+            descripcion=animal.descripcion,
+            fotos=animal.fotos,
+            estado_adopcion=animal.estado_adopcion,
+            id_refugio=strawberry.ID(str(animal.id_refugio)) if animal.id_refugio else None
+        ) for animal in animales]
+
 

@@ -155,3 +155,42 @@ class AnimalService:
             "limit": limit,
             "offset": offset
         }
+    
+    async def obtener_animales_ordenados(
+        self,
+        order_by: str = "nombre",
+        order: str = "asc"
+    ) -> List[Animal]:
+        """
+        Obtener animales ordenados por un campo específico.
+        
+        Args:
+            order_by: Campo por el cual ordenar ("nombre", "edad", "fecha_creacion")
+            order: Dirección del ordenamiento ("asc" o "desc")
+        
+        Returns:
+            Lista de animales ordenados
+        """
+        todos_animales = await self.repo.listar_animales()
+        
+        # Determinar función de ordenamiento según el campo
+        if order_by == "nombre":
+            key_func = lambda animal: (animal.nombre or "").lower()
+        elif order_by == "edad":
+            # Poner None al final en ambos casos
+            key_func = lambda animal: (animal.edad if animal.edad is not None else float('inf'))
+        elif order_by == "fecha_creacion":
+            # Ordenar por fecha de creación (más recientes primero si desc)
+            key_func = lambda animal: animal.fecha_creacion if animal.fecha_creacion else ""
+        else:
+            # Por defecto, ordenar por nombre
+            key_func = lambda animal: (animal.nombre or "").lower()
+        
+        # Ordenar
+        animales_ordenados = sorted(
+            todos_animales,
+            key=key_func,
+            reverse=(order.lower() == "desc")
+        )
+        
+        return animales_ordenados
