@@ -153,4 +153,47 @@ class AnimalQuery:
             estado_adopcion=animal.estado_adopcion,
             id_refugio=strawberry.ID(str(animal.id_refugio)) if animal.id_refugio else None
         ) for animal in animales]
+    
+    @strawberry.field
+    async def animales_filtrados(
+        self,
+        nombre: Optional[str] = None,
+        id_especie: Optional[strawberry.ID] = None,
+        id_refugio: Optional[strawberry.ID] = None,
+        estado_adopcion: Optional[str] = None,
+        edad_min: Optional[int] = None,
+        edad_max: Optional[int] = None
+    ) -> List[AnimalType]:
+        """
+        Filtrar animales con múltiples criterios combinados.
+        Todos los parámetros son opcionales.
+        """
+        adapter = AnimalRepository()
+        service = AnimalService(adapter)
+        
+        # Convertir IDs de strawberry.ID a UUID si existen
+        especie_uuid = UUID(id_especie) if id_especie else None
+        refugio_uuid = UUID(id_refugio) if id_refugio else None
+        
+        animales = await service.obtener_animales_filtrados(
+            nombre=nombre,
+            id_especie=especie_uuid,
+            id_refugio=refugio_uuid,
+            estado_adopcion=estado_adopcion,
+            edad_min=edad_min,
+            edad_max=edad_max
+        )
+        
+        return [AnimalType(
+            id_animal=strawberry.ID(str(animal.id_animal)),
+            nombre=animal.nombre,
+            id_especie=strawberry.ID(str(animal.id_especie)) if animal.id_especie else None,
+            especie=animal.especie,
+            edad=animal.edad,
+            estado=animal.estado,
+            descripcion=animal.descripcion,
+            fotos=animal.fotos,
+            estado_adopcion=animal.estado_adopcion,
+            id_refugio=strawberry.ID(str(animal.id_refugio)) if animal.id_refugio else None
+        ) for animal in animales]
 

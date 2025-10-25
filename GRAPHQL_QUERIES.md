@@ -6,7 +6,7 @@ Este documento lista las **queries especiales** (filtros, relaciones y paginaci�
 
 ---
 
-## 🐾 Módulo: Animales (6 queries especiales)
+## 🐾 Módulo: Animales (7 queries especiales)
 
 ### 1. Buscar animales por nombre 🆕
 **Descripción**: Busca animales por nombre (búsqueda parcial, case-insensitive)
@@ -95,7 +95,82 @@ Menores de 5 años:
 
 **Nota**: Los animales sin edad (`null`) no aparecen en los resultados filtrados.
 
-### 3. Obtener animales por estado de adopción
+### 3. Filtros combinados (Query más potente) 🆕🔥
+**Descripción**: Combina múltiples filtros simultáneamente. Todos los parámetros son opcionales.
+
+```graphql
+query AnimalesFiltrados(
+  $nombre: String
+  $idEspecie: ID
+  $idRefugio: ID
+  $estadoAdopcion: String
+  $edadMin: Int
+  $edadMax: Int
+) {
+  animalesFiltrados(
+    nombre: $nombre
+    idEspecie: $idEspecie
+    idRefugio: $idRefugio
+    estadoAdopcion: $estadoAdopcion
+    edadMin: $edadMin
+    edadMax: $edadMax
+  ) {
+    idAnimal
+    nombre
+    especie
+    edad
+    fotos
+    estadoAdopcion
+    descripcion
+    idRefugio
+  }
+}
+```
+
+**Variables - Ejemplos de uso**:
+
+Perros cachorros disponibles:
+```json
+{
+  "idEspecie": "uuid-de-perro",
+  "edadMin": 0,
+  "edadMax": 1,
+  "estadoAdopcion": "disponible"
+}
+```
+
+Gatos en un refugio específico:
+```json
+{
+  "idEspecie": "uuid-de-gato",
+  "idRefugio": "uuid-del-refugio"
+}
+```
+
+Buscar "Max" solo disponibles:
+```json
+{
+  "nombre": "Max",
+  "estadoAdopcion": "disponible"
+}
+```
+
+Adultos de cualquier especie en un refugio:
+```json
+{
+  "idRefugio": "uuid-del-refugio",
+  "edadMin": 3,
+  "edadMax": 7
+}
+```
+
+**Ventajas**:
+- ✅ Combina todos los filtros disponibles
+- ✅ Todos los parámetros opcionales
+- ✅ Ideal para buscadores avanzados
+- ✅ Una sola llamada al servidor
+
+### 4. Obtener animales por estado de adopción
 **Descripción**: Filtra animales según su estado de adopción (disponible, adoptado, en proceso, etc.)
 
 ```graphql
@@ -113,7 +188,7 @@ query GetAnimalesPorEstado {
 
 **Estados posibles**: `"disponible"`, `"adoptado"`, `"en_proceso"`, `"reservado"`
 
-### 4. Obtener animales por especie
+### 5. Obtener animales por especie
 **Descripción**: Filtra todos los animales de una especie específica
 
 ```graphql
@@ -135,7 +210,7 @@ query GetAnimalesPorEspecie($especieId: ID!) {
 }
 ```
 
-### 5. Obtener animales por refugio
+### 6. Obtener animales por refugio
 **Descripción**: Obtiene todos los animales alojados en un refugio específico
 
 ```graphql
@@ -157,7 +232,7 @@ query GetAnimalesPorRefugio($refugioId: ID!) {
 }
 ```
 
-### 6. Obtener solo animales disponibles
+### 7. Obtener solo animales disponibles
 **Descripción**: Atajo para obtener solo animales con estado "disponible"
 
 ```graphql
@@ -427,6 +502,7 @@ query GetCatalogoAnimales($especieId: ID!) {
 |--------|-------|------|------------|
 | **Animal** | `buscarAnimales` 🆕 | Búsqueda | `nombre: String!` |
 | **Animal** | `animalesPorEdad` 🆕 | Filtro | `edadMin: Int, edadMax: Int` (opcionales) |
+| **Animal** | `animalesFiltrados` 🆕🔥 | Filtro Combinado | `nombre, idEspecie, idRefugio, estadoAdopcion, edadMin, edadMax` (todos opcionales) |
 | **Animal** | `animales(estadoAdopcion)` | Filtro | `String` opcional |
 | **Animal** | `animalesPorEspecie` | Filtro | `idEspecie: ID!` |
 | **Animal** | `animalesPorRefugio` | Filtro | `idRefugio: ID!` |
@@ -437,6 +513,6 @@ query GetCatalogoAnimales($especieId: ID!) {
 | **Pago** | `listarPagos` | Paginación | `limit, offset` |
 | **Pago** | `pagosPorDonacion` | Relación | `idDonacion: ID!` |
 
-**Total**: **11 queries especiales** + 26 queries básicas (listar/por ID) = **37 queries disponibles**
+**Total**: **12 queries especiales** + 26 queries básicas (listar/por ID) = **38 queries disponibles**
 
 --

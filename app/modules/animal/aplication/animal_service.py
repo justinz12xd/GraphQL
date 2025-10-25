@@ -59,3 +59,55 @@ class AnimalService:
             resultado.append(animal)
         
         return resultado
+    
+    async def obtener_animales_filtrados(
+        self,
+        nombre: Optional[str] = None,
+        id_especie: Optional[UUID] = None,
+        id_refugio: Optional[UUID] = None,
+        estado_adopcion: Optional[str] = None,
+        edad_min: Optional[int] = None,
+        edad_max: Optional[int] = None
+    ) -> List[Animal]:
+        """
+        Filtrar animales con múltiples criterios combinados.
+        Todos los parámetros son opcionales.
+        """
+        todos_animales = await self.repo.listar_animales()
+        
+        resultado = []
+        for animal in todos_animales:
+            # Filtro por nombre (búsqueda parcial, case-insensitive)
+            if nombre:
+                if not animal.nombre or nombre.lower() not in animal.nombre.lower():
+                    continue
+            
+            # Filtro por especie
+            if id_especie:
+                if animal.id_especie != id_especie:
+                    continue
+            
+            # Filtro por refugio
+            if id_refugio:
+                if animal.id_refugio != id_refugio:
+                    continue
+            
+            # Filtro por estado de adopción
+            if estado_adopcion:
+                if animal.estado_adopcion != estado_adopcion:
+                    continue
+            
+            # Filtro por edad mínima
+            if edad_min is not None:
+                if animal.edad is None or animal.edad < edad_min:
+                    continue
+            
+            # Filtro por edad máxima
+            if edad_max is not None:
+                if animal.edad is None or animal.edad > edad_max:
+                    continue
+            
+            # Si pasó todos los filtros, agregarlo
+            resultado.append(animal)
+        
+        return resultado
