@@ -15,8 +15,3 @@ class EspecieService:
     def get_especie(self, especie_id: int) -> Optional[Especie]:
         """Obtener una especie específica según su ID."""
         return self.repo.get_by_id(especie_id)
-
-    def create_especie(self, name: str) -> Especie:
-        """Crear y persistir una nueva especie con el nombre dado."""
-        entidad = Especie(id=None, nombre=name)
-        return self.repo.save(entidad)
