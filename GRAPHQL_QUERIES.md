@@ -6,7 +6,7 @@ Este documento lista las **queries especiales** (filtros, relaciones y paginaci�
 
 ---
 
-## 🐾 Módulo: Animales (7 queries especiales)
+## 🐾 Módulo: Animales (8 queries especiales)
 
 ### 1. Buscar animales por nombre 🆕
 **Descripción**: Busca animales por nombre (búsqueda parcial, case-insensitive)
@@ -170,7 +170,99 @@ Adultos de cualquier especie en un refugio:
 - ✅ Ideal para buscadores avanzados
 - ✅ Una sola llamada al servidor
 
-### 4. Obtener animales por estado de adopción
+### 4. Paginación con filtros 🆕📄
+**Descripción**: Obtiene animales de forma paginada con todos los filtros disponibles. Incluye metadata de paginación.
+
+```graphql
+query AnimalesPaginados(
+  $limit: Int = 20
+  $offset: Int = 0
+  $nombre: String
+  $idEspecie: ID
+  $idRefugio: ID
+  $estadoAdopcion: String
+  $edadMin: Int
+  $edadMax: Int
+) {
+  animalesPaginados(
+    limit: $limit
+    offset: $offset
+    nombre: $nombre
+    idEspecie: $idEspecie
+    idRefugio: $idRefugio
+    estadoAdopcion: $estadoAdopcion
+    edadMin: $edadMin
+    edadMax: $edadMax
+  ) {
+    animales {
+      idAnimal
+      nombre
+      especie
+      edad
+      fotos
+      estadoAdopcion
+    }
+    totalCount
+    hasMore
+    totalPages
+    currentPage
+    limit
+    offset
+  }
+}
+```
+
+**Variables - Ejemplos de uso**:
+
+Primera página (20 resultados):
+```json
+{
+  "limit": 20,
+  "offset": 0
+}
+```
+
+Segunda página:
+```json
+{
+  "limit": 20,
+  "offset": 20
+}
+```
+
+Tercera página:
+```json
+{
+  "limit": 20,
+  "offset": 40
+}
+```
+
+Con filtros (perros disponibles, paginados):
+```json
+{
+  "limit": 10,
+  "offset": 0,
+  "idEspecie": "uuid-perro",
+  "estadoAdopcion": "disponible"
+}
+```
+
+**Metadata retornada**:
+- `totalCount`: Total de resultados (sin paginar)
+- `hasMore`: ¿Hay más páginas disponibles?
+- `totalPages`: Número total de páginas
+- `currentPage`: Página actual (comienza en 1)
+- `limit`: Cantidad de resultados por página
+- `offset`: Desplazamiento actual
+
+**Ventajas**:
+- ✅ Carga resultados en bloques (mejor performance)
+- ✅ Scroll infinito o paginación clásica
+- ✅ Combina con todos los filtros
+- ✅ Metadata completa para UI de paginación
+
+### 5. Obtener animales por estado de adopción
 **Descripción**: Filtra animales según su estado de adopción (disponible, adoptado, en proceso, etc.)
 
 ```graphql
@@ -188,7 +280,7 @@ query GetAnimalesPorEstado {
 
 **Estados posibles**: `"disponible"`, `"adoptado"`, `"en_proceso"`, `"reservado"`
 
-### 5. Obtener animales por especie
+### 6. Obtener animales por especie
 **Descripción**: Filtra todos los animales de una especie específica
 
 ```graphql
@@ -210,7 +302,7 @@ query GetAnimalesPorEspecie($especieId: ID!) {
 }
 ```
 
-### 6. Obtener animales por refugio
+### 7. Obtener animales por refugio
 **Descripción**: Obtiene todos los animales alojados en un refugio específico
 
 ```graphql
@@ -232,7 +324,7 @@ query GetAnimalesPorRefugio($refugioId: ID!) {
 }
 ```
 
-### 7. Obtener solo animales disponibles
+### 8. Obtener solo animales disponibles
 **Descripción**: Atajo para obtener solo animales con estado "disponible"
 
 ```graphql
@@ -503,6 +595,7 @@ query GetCatalogoAnimales($especieId: ID!) {
 | **Animal** | `buscarAnimales` 🆕 | Búsqueda | `nombre: String!` |
 | **Animal** | `animalesPorEdad` 🆕 | Filtro | `edadMin: Int, edadMax: Int` (opcionales) |
 | **Animal** | `animalesFiltrados` 🆕🔥 | Filtro Combinado | `nombre, idEspecie, idRefugio, estadoAdopcion, edadMin, edadMax` (todos opcionales) |
+| **Animal** | `animalesPaginados` 🆕📄 | Paginación + Filtros | `limit, offset, nombre, idEspecie, idRefugio, estadoAdopcion, edadMin, edadMax` (con metadata) |
 | **Animal** | `animales(estadoAdopcion)` | Filtro | `String` opcional |
 | **Animal** | `animalesPorEspecie` | Filtro | `idEspecie: ID!` |
 | **Animal** | `animalesPorRefugio` | Filtro | `idRefugio: ID!` |
@@ -513,6 +606,6 @@ query GetCatalogoAnimales($especieId: ID!) {
 | **Pago** | `listarPagos` | Paginación | `limit, offset` |
 | **Pago** | `pagosPorDonacion` | Relación | `idDonacion: ID!` |
 
-**Total**: **12 queries especiales** + 26 queries básicas (listar/por ID) = **38 queries disponibles**
+**Total**: **13 queries especiales** + 26 queries básicas (listar/por ID) = **39 queries disponibles**
 
 --

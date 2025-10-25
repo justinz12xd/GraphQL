@@ -15,6 +15,17 @@ class AnimalType:
     estado_adopcion: Optional[str]
     id_refugio: Optional[UUID]
 
+@strawberry.type
+class AnimalesPaginadosType:
+    """Tipo de respuesta para queries con paginación"""
+    animales: List[AnimalType]
+    total_count: int
+    has_more: bool
+    total_pages: int
+    current_page: int
+    limit: int
+    offset: int
+
 @strawberry.input
 class NewAnimalInput:
     nombre: str

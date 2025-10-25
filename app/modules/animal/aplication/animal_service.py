@@ -111,3 +111,47 @@ class AnimalService:
             resultado.append(animal)
         
         return resultado
+    
+    async def obtener_animales_paginados(
+        self,
+        limit: int = 20,
+        offset: int = 0,
+        nombre: Optional[str] = None,
+        id_especie: Optional[UUID] = None,
+        id_refugio: Optional[UUID] = None,
+        estado_adopcion: Optional[str] = None,
+        edad_min: Optional[int] = None,
+        edad_max: Optional[int] = None
+    ) -> dict:
+        """
+        Obtener animales con paginación y filtros opcionales.
+        Retorna un diccionario con los resultados paginados y metadata.
+        """
+        # Primero obtener todos los animales filtrados
+        animales_filtrados = await self.obtener_animales_filtrados(
+            nombre=nombre,
+            id_especie=id_especie,
+            id_refugio=id_refugio,
+            estado_adopcion=estado_adopcion,
+            edad_min=edad_min,
+            edad_max=edad_max
+        )
+        
+        # Calcular metadata de paginación
+        total_count = len(animales_filtrados)
+        has_more = offset + limit < total_count
+        total_pages = (total_count + limit - 1) // limit if limit > 0 else 0
+        current_page = (offset // limit) + 1 if limit > 0 else 1
+        
+        # Aplicar paginación
+        animales_paginados = animales_filtrados[offset:offset + limit]
+        
+        return {
+            "animales": animales_paginados,
+            "total_count": total_count,
+            "has_more": has_more,
+            "total_pages": total_pages,
+            "current_page": current_page,
+            "limit": limit,
+            "offset": offset
+        }
