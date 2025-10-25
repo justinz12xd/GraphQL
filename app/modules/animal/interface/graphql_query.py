@@ -130,4 +130,27 @@ class AnimalQuery:
             estado_adopcion=animal.estado_adopcion,
             id_refugio=strawberry.ID(str(animal.id_refugio)) if animal.id_refugio else None
         ) for animal in animales]
+    
+    @strawberry.field
+    async def animales_por_edad(
+        self, 
+        edad_min: Optional[int] = None, 
+        edad_max: Optional[int] = None
+    ) -> List[AnimalType]:
+        """Filtrar animales por rango de edad (ambos parámetros opcionales)"""
+        adapter = AnimalRepository()
+        service = AnimalService(adapter)
+        animales = await service.obtener_animales_por_rango_edad(edad_min, edad_max)
+        return [AnimalType(
+            id_animal=strawberry.ID(str(animal.id_animal)),
+            nombre=animal.nombre,
+            id_especie=strawberry.ID(str(animal.id_especie)) if animal.id_especie else None,
+            especie=animal.especie,
+            edad=animal.edad,
+            estado=animal.estado,
+            descripcion=animal.descripcion,
+            fotos=animal.fotos,
+            estado_adopcion=animal.estado_adopcion,
+            id_refugio=strawberry.ID(str(animal.id_refugio)) if animal.id_refugio else None
+        ) for animal in animales]
 

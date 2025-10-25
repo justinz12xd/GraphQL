@@ -37,3 +37,25 @@ class AnimalService:
             animal for animal in todos_animales 
             if animal.nombre and nombre_lower in animal.nombre.lower()
         ]
+    
+    async def obtener_animales_por_rango_edad(self, edad_min: Optional[int] = None, edad_max: Optional[int] = None) -> List[Animal]:
+        """Filtrar animales por rango de edad (ambos parámetros opcionales)"""
+        todos_animales = await self.repo.listar_animales()
+        
+        resultado = []
+        for animal in todos_animales:
+            # Si no tiene edad, no incluir en resultados filtrados
+            if animal.edad is None:
+                continue
+            
+            # Verificar edad mínima
+            if edad_min is not None and animal.edad < edad_min:
+                continue
+            
+            # Verificar edad máxima
+            if edad_max is not None and animal.edad > edad_max:
+                continue
+            
+            resultado.append(animal)
+        
+        return resultado
