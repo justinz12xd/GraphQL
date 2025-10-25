@@ -6,9 +6,38 @@ Este documento lista las **queries especiales** (filtros, relaciones y paginaci�
 
 ---
 
-## 🐾 Módulo: Animales (4 queries especiales)
+## 🐾 Módulo: Animales (5 queries especiales)
 
-### 1. Obtener animales por estado de adopción
+### 1. Buscar animales por nombre 🆕
+**Descripción**: Busca animales por nombre (búsqueda parcial, case-insensitive)
+
+```graphql
+query BuscarAnimales($nombre: String!) {
+  buscarAnimales(nombre: $nombre) {
+    idAnimal
+    nombre
+    especie
+    edad
+    fotos
+    estadoAdopcion
+    descripcion
+  }
+}
+```
+
+**Variables**:
+```json
+{
+  "nombre": "Max"
+}
+```
+
+**Ejemplos de búsqueda**:
+- `"Max"` → encuentra "Max", "Maximus", "Maxwell"
+- `"luna"` → encuentra "Luna", "Lunita" (case-insensitive)
+- `"to"` → encuentra "Toto", "Tony", "Tobby"
+
+### 2. Obtener animales por estado de adopción
 **Descripción**: Filtra animales según su estado de adopción (disponible, adoptado, en proceso, etc.)
 
 ```graphql
@@ -26,7 +55,7 @@ query GetAnimalesPorEstado {
 
 **Estados posibles**: `"disponible"`, `"adoptado"`, `"en_proceso"`, `"reservado"`
 
-### 2. Obtener animales por especie
+### 3. Obtener animales por especie
 **Descripción**: Filtra todos los animales de una especie específica
 
 ```graphql
@@ -48,7 +77,7 @@ query GetAnimalesPorEspecie($especieId: ID!) {
 }
 ```
 
-### 3. Obtener animales por refugio
+### 4. Obtener animales por refugio
 **Descripción**: Obtiene todos los animales alojados en un refugio específico
 
 ```graphql
@@ -70,7 +99,7 @@ query GetAnimalesPorRefugio($refugioId: ID!) {
 }
 ```
 
-### 4. Obtener solo animales disponibles
+### 5. Obtener solo animales disponibles
 **Descripción**: Atajo para obtener solo animales con estado "disponible"
 
 ```graphql
@@ -338,6 +367,7 @@ query GetCatalogoAnimales($especieId: ID!) {
 
 | Módulo | Query | Tipo | Parámetros |
 |--------|-------|------|------------|
+| **Animal** | `buscarAnimales` 🆕 | Búsqueda | `nombre: String!` |
 | **Animal** | `animales(estadoAdopcion)` | Filtro | `String` opcional |
 | **Animal** | `animalesPorEspecie` | Filtro | `idEspecie: ID!` |
 | **Animal** | `animalesPorRefugio` | Filtro | `idRefugio: ID!` |
@@ -348,6 +378,6 @@ query GetCatalogoAnimales($especieId: ID!) {
 | **Pago** | `listarPagos` | Paginación | `limit, offset` |
 | **Pago** | `pagosPorDonacion` | Relación | `idDonacion: ID!` |
 
-**Total**: **9 queries especiales** + 26 queries básicas (listar/por ID) = **35 queries disponibles**
+**Total**: **10 queries especiales** + 26 queries básicas (listar/por ID) = **36 queries disponibles**
 
 --

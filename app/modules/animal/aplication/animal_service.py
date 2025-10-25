@@ -28,3 +28,12 @@ class AnimalService:
         """Obtener animales filtrados por estado de adopción"""
         todos_animales = await self.repo.listar_animales()
         return [animal for animal in todos_animales if animal.estado_adopcion == estado]
+    
+    async def buscar_animales_por_nombre(self, nombre: str) -> List[Animal]:
+        """Buscar animales por nombre (búsqueda parcial, case-insensitive)"""
+        todos_animales = await self.repo.listar_animales()
+        nombre_lower = nombre.lower()
+        return [
+            animal for animal in todos_animales 
+            if animal.nombre and nombre_lower in animal.nombre.lower()
+        ]
