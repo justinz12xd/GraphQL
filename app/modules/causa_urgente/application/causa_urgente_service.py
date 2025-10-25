@@ -12,4 +12,14 @@ class CausaUrgenteService:
 
     async def obtener_causa_urgente_por_id(self, id_causa_urgente: UUID) -> Optional[CausaUrgente]:
         return await self.repo.obtener_causa_urgente_por_id(id_causa_urgente)
+    
+    async def obtener_causas_urgentes_por_refugio(self, id_refugio: UUID) -> List[CausaUrgente]:
+        """Obtener causas urgentes filtradas por refugio"""
+        todas_causas = await self.repo.obtener_causas_urgentes()
+        return [causa for causa in todas_causas if causa.id_refugio == id_refugio]
+    
+    async def obtener_causas_urgentes_por_animal(self, id_animal: UUID) -> List[CausaUrgente]:
+        """Obtener causas urgentes filtradas por animal"""
+        todas_causas = await self.repo.obtener_causas_urgentes()
+        return [causa for causa in todas_causas if causa.id_animal == id_animal]
         

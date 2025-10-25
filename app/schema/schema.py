@@ -8,9 +8,27 @@ from app.modules.pago.interface.graphql_query import PagoQuery
 from app.modules.voluntario.interface.graphql_query import VoluntarioQuery
 from app.modules.campania.interface.graphql_query import CampaniaQuery
 from app.modules.supervisor.interface.graphql_query import SupervisorQuery
+from app.modules.especie.interface.graphql_query import EspecieQuery
+from app.modules.refugio.interface.graphql_query import RefugioQuery
+from app.modules.publicacion.interface.graphql_query import PublicacionQuery
+from app.modules.seguimiento.interface.graphql_query import SeguimientoQuery
 
 @strawberry.type
-class Query(AnimalQuery, UsuarioQuery, AdopcionQuery, CausaUrgenteQuery, PagoQuery, CampaniaQuery, TipoCampaniaQuery, VoluntarioQuery, SupervisorQuery):
+class Query(
+    AnimalQuery, 
+    UsuarioQuery, 
+    AdopcionQuery, 
+    CausaUrgenteQuery, 
+    PagoQuery, 
+    CampaniaQuery, 
+    TipoCampaniaQuery, 
+    VoluntarioQuery, 
+    SupervisorQuery,
+    EspecieQuery,
+    RefugioQuery,
+    PublicacionQuery,
+    SeguimientoQuery
+):
     """Root Query - Combina todas las queries de los módulos"""
     pass
 
