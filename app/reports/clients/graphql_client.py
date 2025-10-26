@@ -74,13 +74,13 @@ class GraphQLClient:
             animalesDisponibles {
                 idAnimal
                 nombre
+                idEspecie
                 especie
                 edad
                 estadoAdopcion
                 descripcion
                 fotos
                 idRefugio
-                fechaCreacion
             }
         }
         """
@@ -102,13 +102,13 @@ class GraphQLClient:
             animalesPorEspecie(idEspecie: $idEspecie) {
                 idAnimal
                 nombre
+                idEspecie
                 especie
                 edad
                 estadoAdopcion
                 descripcion
                 fotos
                 idRefugio
-                fechaCreacion
             }
         }
         """
@@ -133,12 +133,12 @@ class GraphQLClient:
             animalesPorRefugio(idRefugio: $idRefugio) {
                 idAnimal
                 nombre
+                idEspecie
                 especie
                 edad
                 estadoAdopcion
                 descripcion
                 idRefugio
-                fechaCreacion
             }
         }
         """
@@ -187,13 +187,13 @@ class GraphQLClient:
             ) {
                 idAnimal
                 nombre
+                idEspecie
                 especie
                 edad
                 estadoAdopcion
                 descripcion
                 fotos
                 idRefugio
-                fechaCreacion
             }
         }
         """
@@ -226,7 +226,6 @@ class GraphQLClient:
                 nombre
                 direccion
                 telefono
-                email
                 capacidad
             }
         }
@@ -248,7 +247,6 @@ class GraphQLClient:
                 nombre
                 direccion
                 telefono
-                email
                 capacidad
             }
         }
@@ -266,9 +264,8 @@ class GraphQLClient:
         query = """
         query {
             especies {
-                idEspecie
+                id
                 nombre
-                descripcion
             }
         }
         """
@@ -285,10 +282,11 @@ class GraphQLClient:
                 idCampania
                 titulo
                 descripcion
-                meta
-                montoRecaudado
                 fechaInicio
                 fechaFin
+                lugar
+                organizador
+                estado
             }
         }
         """

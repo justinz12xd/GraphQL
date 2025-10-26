@@ -54,6 +54,10 @@ class ReportService:
         """
         logger.info(f"Generando reporte de animales por especie: {id_especie}")
         
+        # Obtener especies primero para hacer el mapeo
+        especies = await self.graphql_client.obtener_especies()
+        especies_dict = {str(e['id']): e['nombre'] for e in especies}
+        
         # Obtener datos
         animales = await self.graphql_client.obtener_animales_por_especie(
             id_especie
@@ -64,8 +68,14 @@ class ReportService:
                 f"No se encontraron animales para la especie {id_especie}"
             )
         
+        # Mapear nombres de especies a los animales si no vienen
+        for animal in animales:
+            if not animal.get('especie') and animal.get('idEspecie'):
+                id_esp = str(animal['idEspecie'])
+                animal['especie'] = especies_dict.get(id_esp, 'Desconocida')
+        
         # Extraer nombre de especie
-        nombre_especie = animales[0].get('especie', 'Desconocida')
+        nombre_especie = animales[0].get('especie', especies_dict.get(id_especie, 'Desconocida'))
         
         # Generar PDF
         pdf_buffer = self.pdf_generator.generate(
@@ -97,6 +107,10 @@ class ReportService:
         """
         logger.info(f"Generando reporte de animales por refugio: {id_refugio}")
         
+        # Obtener especies primero para hacer el mapeo
+        especies = await self.graphql_client.obtener_especies()
+        especies_dict = {str(e['id']): e['nombre'] for e in especies}
+        
         # Obtener animales
         animales = await self.graphql_client.obtener_animales_por_refugio(
             id_refugio
@@ -106,6 +120,12 @@ class ReportService:
             raise ValueError(
                 f"No se encontraron animales para el refugio {id_refugio}"
             )
+        
+        # Mapear nombres de especies a los animales si no vienen
+        for animal in animales:
+            if not animal.get('especie') and animal.get('idEspecie'):
+                id_esp = str(animal['idEspecie'])
+                animal['especie'] = especies_dict.get(id_esp, 'Desconocida')
         
         # Obtener nombre del refugio
         refugio = await self.graphql_client.obtener_refugio_por_id(id_refugio)
@@ -135,11 +155,21 @@ class ReportService:
         """
         logger.info("Generando reporte general de animales")
         
+        # Obtener especies primero para hacer el mapeo
+        especies = await self.graphql_client.obtener_especies()
+        especies_dict = {str(e['id']): e['nombre'] for e in especies}
+        
         # Obtener datos
         animales = await self.graphql_client.obtener_todos_animales()
         
         if not animales:
             raise ValueError("No hay animales registrados en el sistema")
+        
+        # Mapear nombres de especies a los animales si no vienen
+        for animal in animales:
+            if not animal.get('especie') and animal.get('idEspecie'):
+                id_esp = str(animal['idEspecie'])
+                animal['especie'] = especies_dict.get(id_esp, 'Desconocida')
         
         # Generar PDF
         pdf_buffer = self.pdf_generator.generate(
@@ -170,6 +200,10 @@ class ReportService:
         """
         logger.info(f"Generando reporte de animales filtrados: {filtros}")
         
+        # Obtener especies primero para hacer el mapeo
+        especies = await self.graphql_client.obtener_especies()
+        especies_dict = {str(e['id']): e['nombre'] for e in especies}
+        
         # Obtener datos
         animales = await self.graphql_client.obtener_animales_filtrados(
             nombre=filtros.nombre,
@@ -184,6 +218,12 @@ class ReportService:
             raise ValueError(
                 "No se encontraron animales con los filtros especificados"
             )
+        
+        # Mapear nombres de especies a los animales si no vienen
+        for animal in animales:
+            if not animal.get('especie') and animal.get('idEspecie'):
+                id_esp = str(animal['idEspecie'])
+                animal['especie'] = especies_dict.get(id_esp, 'Desconocida')
         
         # Generar PDF
         pdf_buffer = self.pdf_generator.generate(
