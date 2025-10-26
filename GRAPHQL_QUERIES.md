@@ -677,4 +677,87 @@ query GetCatalogoAnimales($especieId: ID!) {
 
 **Total**: **14 queries especiales** + 26 queries básicas (listar/por ID) = **40 queries disponibles** 🎉
 
---
+---
+
+## 📊 Módulo: Estadísticas y Reportes (4 queries de agregación)
+
+### 1. Especies más adoptadas
+**Descripción**: Ranking de especies por número de adopciones exitosas
+
+```graphql
+query EspeciesMasAdoptadas($limite: Int = 10) {
+  especiesMasAdoptadas(limite: $limite) {
+    especie
+    totalAdopciones
+  }
+}
+```
+
+**Variables**:
+```json
+{
+  "limite": 5
+}
+```
+
+### 2. Adopciones por mes
+**Descripción**: Tendencia mensual de adopciones con desglose por especie
+
+```graphql
+query AdopcionesPorMes($meses: Int = 12) {
+  adopcionesPorMes(meses: $meses) {
+    periodo
+    totalAdopciones
+    desglosePorEspecie {
+      especie
+      cantidad
+    }
+  }
+}
+```
+
+**Variables**:
+```json
+{
+  "meses": 6
+}
+```
+
+### 3. Participación de voluntarios por tipo de campaña
+**Descripción**: Voluntarios agrupados por tipo de campaña con estado activo/inactivo
+
+```graphql
+query ParticipacionVoluntarios {
+  participacionVoluntariosPorTipoCampania {
+    tipoCampania
+    totalVoluntarios
+    voluntariosActivos
+    voluntariosInactivos
+  }
+}
+```
+
+### 4. Actividad mensual del sistema
+**Descripción**: Resumen mensual de adopciones, publicaciones y donaciones
+
+```graphql
+query ActividadMensual($meses: Int = 12) {
+  actividadMensual(meses: $meses) {
+    periodo
+    totalAdopciones
+    totalPublicaciones
+    totalDonaciones
+    montoTotalDonado
+  }
+}
+```
+
+**Variables**:
+```json
+{
+  "meses": 6
+}
+```
+
+---
+
