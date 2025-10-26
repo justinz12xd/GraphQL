@@ -13,6 +13,7 @@ class PublicacionType:
     fecha_publicacion: datetime
     estado: str
     id_usuario: Optional[strawberry.ID] = None
+    id_animal: Optional[strawberry.ID] = None
 
 
 @strawberry.input
@@ -23,6 +24,7 @@ class CreatePublicacionInput:
     fecha_publicacion: datetime
     estado: str
     id_usuario: strawberry.ID
+    id_animal: Optional[strawberry.ID] = None
 
 
 @strawberry.input
@@ -34,3 +36,4 @@ class UpdatePublicacionInput:
     fecha_publicacion: Optional[datetime] = None
     estado: Optional[str] = None
     id_usuario: Optional[strawberry.ID] = None
+    id_animal: Optional[strawberry.ID] = None

@@ -25,6 +25,7 @@ class PublicacionQuery:
                 fecha_publicacion=pub.fecha_publicacion,
                 estado=pub.estado,
                 id_usuario=strawberry.ID(str(pub.id_usuario)) if pub.id_usuario else None,
+                id_animal=strawberry.ID(str(pub.id_animal)) if pub.id_animal else None,
             )
             for pub in publicaciones
         ]
@@ -46,4 +47,5 @@ class PublicacionQuery:
             fecha_publicacion=publicacion.fecha_publicacion,
             estado=publicacion.estado,
             id_usuario=strawberry.ID(str(publicacion.id_usuario)) if publicacion.id_usuario else None,
+            id_animal=strawberry.ID(str(publicacion.id_animal)) if publicacion.id_animal else None,
         )

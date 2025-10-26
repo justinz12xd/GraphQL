@@ -36,7 +36,8 @@ class PublicacionRepository:
             fecha_publicacion=(datetime.fromisoformat(data["fecha_publicacion"].replace("Z", "+00:00"))
                               if isinstance(data.get("fecha_publicacion"), str) else data.get("fecha_publicacion")),
             estado=data.get("estado"),
-            id_usuario=UUID(data.get("id_usuario")) if data.get("id_usuario") and isinstance(data.get("id_usuario"), str) else data.get("id_usuario")
+            id_usuario=UUID(data.get("id_usuario")) if data.get("id_usuario") and isinstance(data.get("id_usuario"), str) else data.get("id_usuario"),
+            id_animal=UUID(data.get("id_animal")) if data.get("id_animal") and isinstance(data.get("id_animal"), str) else data.get("id_animal")
         )
 
     async def listar_publicaciones(self) -> list[Publicacion]:

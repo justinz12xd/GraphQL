@@ -16,6 +16,7 @@ class Publicacion:
     fecha_publicacion: datetime
     estado: str
     id_usuario: UUID
+    id_animal: Optional[UUID] = None
 
 
 @dataclass
@@ -25,6 +26,7 @@ class NewPublicacion:
     fecha_publicacion: datetime
     estado: str
     id_usuario: UUID
+    id_animal: Optional[UUID] = None
 
 
 @dataclass
@@ -35,3 +37,4 @@ class UpdatePublicacion:
     fecha_publicacion: Optional[datetime] = None
     estado: Optional[str] = None
     id_usuario: Optional[UUID] = None
+    id_animal: Optional[UUID] = None
